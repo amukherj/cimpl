@@ -1,12 +1,13 @@
 
-CFLAGS=-g -Wall -I../include
-ARFLAGS=rv
+CFLAGS=-g -Wall -I../include # -fPIC
+ARFLAGS=rvs
 
-all: libcimpl.a
+all: ../lib/libcimpl.a
 
 clean:
-	rm -rf *.o *.a
+	rm -rf *.o ../lib/*.a
 
-libcimpl.a: slist.o node.o stack.o
+../lib/libcimpl.a: slist.o node.o stack.o treenode.o bstree.o
+	mkdir -p ../lib
 	$(AR) $(ARFLAGS) $@ $^
 
