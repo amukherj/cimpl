@@ -15,6 +15,7 @@ typedef struct _slist
     void (*push_back)(struct _slist *thisptr, void *data);
     nodeptr (*pop_back)(struct _slist *thisptr);
     nodeptr (*pop_front)(struct _slist *thisptr);
+    nodeptr (*front)(struct _slist *thisptr);
     int (*is_empty)(const struct _slist *thisptr);
 
     void (*_destructor)(struct _slist *thisptr);

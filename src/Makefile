@@ -1,5 +1,5 @@
 
-CFLAGS=-g -Wall -I../include # -fPIC
+CFLAGS=-g -Wall -I../include -std=c99 # -fPIC
 ARFLAGS=rvs
 
 all: ../lib/libcimpl.a

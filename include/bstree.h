@@ -15,6 +15,16 @@ typedef struct _bstree
     void (*insert)(struct _bstree *thisptr, void *data);
     treenodeptr (*remove)(struct _bstree *thisptr, void *data);
     treenodeptr (*find)(const struct _bstree *thisptr, void *data);
+    int (*is_empty)(const struct _bstree *thisptr);
+
+    void (*traverse_inorder)(const struct _bstree *thisptr,
+                                void (*action)(const treenode*));
+    void (*traverse_preorder)(const struct _bstree *thisptr,
+                                void (*action)(const treenode*));
+    void (*traverse_postorder)(const struct _bstree *thisptr,
+                                void (*action)(const treenode*));
+    void (*traverse_levelorder)(const struct _bstree *thisptr,
+                                void (*action)(const treenode*));
 
     void (*_destructor)(struct _bstree *thisptr);
 } bstree, *bstreeptr;

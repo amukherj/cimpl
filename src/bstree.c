@@ -6,6 +6,13 @@ static treenodeptr remove(bstree *thisptr, void *data);
 static treenodeptr find(const bstree *thisptr, void *data);
 static void bstree_destructor(bstree *thisptr);
 
+static void traverse_inorder(const bstree *thisptr, void (*action)(const treenode*));
+static void traverse_preorder(const bstree *thisptr, void (*action)(const treenode*));
+static void traverse_postorder(const bstree *thisptr, void (*action)(const treenode*));
+static void traverse_levelorder(const bstree* thisptr,
+                                void (*action)(const treenode*));
+static int is_empty(const struct _bstree *thisptr);
+
 bstreeptr make_bstree(int (*cmp)(const void *lhs, const void *rhs))
 {
     bstreeptr result = malloc(sizeof(bstree));
@@ -15,6 +22,13 @@ bstreeptr make_bstree(int (*cmp)(const void *lhs, const void *rhs))
     result->insert = &insert;
     result->remove = &remove;
     result->find = &find;
+    result->is_empty = &is_empty;
+
+    result->traverse_inorder = &traverse_inorder;
+    result->traverse_preorder = &traverse_preorder;
+    result->traverse_postorder = &traverse_postorder;
+    result->traverse_levelorder = &traverse_levelorder;
+
     result->_destructor = &bstree_destructor;
 
     return result;
@@ -28,7 +42,7 @@ static void insert(struct _bstree *thisptr, void *data)
     }
 
     treenodeptr result = thisptr->root;
-    int direction = thisptr->cmp(result->data, data);
+    int direction = thisptr->cmp(data, result->data);
 
     while (direction) {
         treenodeptr new_result =
@@ -39,7 +53,7 @@ static void insert(struct _bstree *thisptr, void *data)
             direction = 0;
         } else {
             result = new_result;
-            direction = thisptr->cmp(result->data, data);
+            direction = thisptr->cmp(data, result->data);
         }
     }
 }
@@ -61,6 +75,11 @@ static treenodeptr pluck_smallest_successor(bstree *thisptr,
     return result;
 }
 
+static int is_empty(const bstree *thisptr)
+{
+    return (!thisptr->root);
+}
+
 static treenodeptr remove(bstree *thisptr, void *data)
 {
     treenodeptr parent = NULL;
@@ -70,7 +89,7 @@ static treenodeptr remove(bstree *thisptr, void *data)
 
     while (current && direction) {
         old_direction = direction;
-        direction = thisptr->cmp(current->data, data);
+        direction = thisptr->cmp(data, current->data);
 
         if (direction != 0) {
             parent = current;
@@ -106,7 +125,12 @@ static treenodeptr remove(bstree *thisptr, void *data)
 static treenodeptr find(const struct _bstree *thisptr, void *data)
 {
     treenodeptr result = thisptr->root;
-    int direction = thisptr->cmp(result->data, data);
+    
+    if (!thisptr->root) {
+        return NULL;
+    }
+
+    int direction = thisptr->cmp(data, result->data);
 
     while (result && direction != 0) {
         if (direction < 0) {
@@ -116,11 +140,43 @@ static treenodeptr find(const struct _bstree *thisptr, void *data)
         }
         
         if (result) {
-            direction = thisptr->cmp(result->data, data);
+            direction = thisptr->cmp(data, result->data);
         }
     }
 
     return result;
+}
+
+static void traverse_inorder(const bstree* thisptr,
+                                void (*action)(const treenode*))
+{
+    if (thisptr->root) {
+        thisptr->root->traverse_inorder(thisptr->root, action);
+    }
+}
+
+static void traverse_preorder(const bstree* thisptr,
+                                void (*action)(const treenode*))
+{
+    if (thisptr->root) {
+        thisptr->root->traverse_preorder(thisptr->root, action);
+    }
+}
+
+static void traverse_postorder(const bstree* thisptr,
+                                void (*action)(const treenode*))
+{
+    if (thisptr->root) {
+        thisptr->root->traverse_postorder(thisptr->root, action);
+    }
+}
+
+static void traverse_levelorder(const bstree* thisptr,
+                                void (*action)(const treenode*))
+{
+    if (thisptr->root) {
+        thisptr->root->traverse_levelorder(thisptr->root, action);
+    }
 }
 
 static void subtree_destructor(treenodeptr stnode)

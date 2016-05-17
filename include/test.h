@@ -6,8 +6,8 @@
 #define IS_TRUE_MSG(expr, msg) \
     do { \
         if (!(expr)) { \
-            fprintf(stderr, "%s: [%s] is false: %s\n", __PRETTY_FUNCTION__, \
-                #expr, msg); \
+            fprintf(stderr, "%s:%d: [%s] is false: %s\n", \
+                    __PRETTY_FUNCTION__, __LINE__, #expr, msg); \
         } \
     } while (0)
 
@@ -16,8 +16,8 @@
 #define EQUALS_MSG(expr1, expr2, msg) \
     do { \
         if ((expr1) != (expr2)) { \
-            fprintf(stderr, "%s: [%s] and [%s] are not equal: %s\n", \
-                __PRETTY_FUNCTION__, #expr1, #expr2, msg); \
+            fprintf(stderr, "%s:%d: [%s] and [%s] are not equal: %s\n", \
+                __PRETTY_FUNCTION__, __LINE__, #expr1, #expr2, msg); \
         } \
     } while (0)
 
@@ -26,8 +26,8 @@
 #define NOT_EQUALS_MSG(expr1, expr2, msg) \
     do { \
         if ((expr1) == (expr2)) { \
-            fprintf(stderr, "%s: [%s] and [%s] are not unequal: %s\n", \
-                            __PRETTY_FUNCTION__, #expr1, #expr2, msg); \
+            fprintf(stderr, "%s:%d: [%s] and [%s] are not unequal: %s\n", \
+                    __PRETTY_FUNCTION__, __LINE__, #expr1, #expr2, msg); \
         } \
     } while (0)
 
